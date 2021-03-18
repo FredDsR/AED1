@@ -6,10 +6,10 @@ void add_char_to_string(char *string, char char_to_add){
     int length = strlen(string);
     
     if (length != 0){
-            string = (char *) realloc(string, sizeof(char) * (length + 1));
-        }
+        string = (char *) realloc(string, sizeof(char) * (length + 1));
+    }
         
-        string[length] = char_to_add;
+    string[length] = char_to_add;
 }
 
 void add_name(char *data_base, char *name_to_add){
@@ -77,7 +77,6 @@ void list_names(char *data_base){
 
         printf("%c", data_base[i]);
     }
-
 }
 
 void read_name(char *name){
