@@ -1,5 +1,16 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+void add_char_to_string(char *string, char char_to_add){
+    int length = strlen(string);
+    
+    if (length != 0){
+            string = (char *) realloc(string, sizeof(char) * (length + 1));
+        }
+        
+        string[length] = char_to_add;
+}
 
 void add_name(char *data_base, char *name_to_add){
 
@@ -69,10 +80,25 @@ void list_names(char *data_base){
 
 }
 
+void read_name(char *name){
+        
+    char letter = '\0';
+    getchar();
+
+    do {
+        
+        letter = getchar();
+        add_char_to_string(name, letter);
+    
+    } while (letter != '\n');
+
+    name[strlen(name)-1] = '\0';
+}
+
 int main(int argc, char const *argv[])
 {
-    char data_base[200] = "";
-    char name[20] = "";
+    char *data_base = (char *) malloc(sizeof(char));
+    char *name = (char *) malloc(sizeof(char));
     int op = 0;
     
     while (op != 4){
@@ -89,13 +115,13 @@ int main(int argc, char const *argv[])
         switch (op) {
         case 1:
             printf("\nDigite o nome a ser adicionado: ");
-            scanf("%s^\n", name);
+            read_name(name);
             add_name(data_base, name);
             break;
         
         case 2:
             printf("\nDigite o nome a ser removido: ");
-            scanf("%s^\n", name);
+            read_name(name);
             remove_name(data_base, name);
             break;
 
