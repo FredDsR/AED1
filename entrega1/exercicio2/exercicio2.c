@@ -25,7 +25,37 @@ void read_name(char *name, int *length){
 }
 
 int find_name(char *data_base, char *name){
+    int i = 0;
+    int i_ref = 0;
+    int *ntc_len = (int *) malloc(sizeof(int));
+    char *name_to_comp = (char *) malloc(sizeof(char));
+
+    if (!ntc_len){printf("Erro! Falta de memoria");return -1;}
+    if (!name_to_comp){printf("Erro! Falta de memoria");return -1;}
+
+    *ntc_len = 1;
+    *name_to_comp = '\0';
     
+    while (data_base[i] != '\0')
+    {
+        if (data_base[i] != ';'){
+            add_char_to_string(name_to_comp, ntc_len, data_base[i]);
+        } else {
+            if (strcmp(name, name_to_comp) == 0){
+                return i_ref;
+            }
+            i_ref = i + 1;
+            name_to_comp = (char *) realloc(name_to_comp, 1);
+            name_to_comp[0] = '\0';
+            *ntc_len = 1;
+        }
+        i++;
+    }
+
+    free(ntc_len);
+    free(name_to_comp);
+
+    return -1;
 }
 
 void add_name(char *data_base, int *length){
