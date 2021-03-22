@@ -2,63 +2,56 @@
 #include <string.h>
 #include <stdlib.h>
 
-void add_char_to_string(char *string, char char_to_add){
-    int length = strlen(string);
+void add_char_to_string(char *string, int *length, char char_to_add){
+
+    string[*length-1] = char_to_add;
+    string = (char *) realloc(string, sizeof(char) * (*length + 1));
+    string[*length] = '\0';
     
-    if (length != 0){
-        string = (char *) realloc(string, sizeof(char) * (length + 1));
-    }
-        
-    string[length] = char_to_add;
+    *length+=1;
 }
 
-void add_name(char *data_base, char *name_to_add){
-
-    int base_length = 0;
+void read_name(char *name, int *length){
     
-    strcat(data_base, name_to_add);
+    char letter = '\0';
+    getchar();
 
-    base_length = strlen(data_base);
+    do {
 
-    data_base[base_length] = ';';
+        letter = getchar();
+        if (letter != '\n'){add_char_to_string(name, length, letter);}
+
+    } while (letter != '\n');
 }
 
+int find_name(char *data_base, char *name){
+    
+}
 
-void remove_name(char *data_base, char *name_to_remove) {
+void add_name(char *data_base, int *length){
+    printf("\nDigite o nome a ser adicionado: ");
+    read_name(data_base, length);
+    add_char_to_string(data_base, length, ';');
+}
 
-    char name_to_comp[21] = "";
-    char aux_data_base[200] = "";
-    int base_length = 0;
-    int aux_length = 0;
-    int name_i = 0;
-    int base_i = 0;
+void remove_name(char *data_base) {
+    
+    int name_pos = 0;
+    char *name_to_remove = (char *) malloc(sizeof(char));
+    int *ntr_len = (int *) malloc(sizeof(int));
+    
+    if (!name_to_remove){printf("Erro! Falta de memoria");return -1;}
+    if (!ntr_len){printf("Erro! Falta de memoria");return -1;}
 
-    base_length = strlen(data_base);
+    printf("Digite o nome a ser removido: ");
+    read_name(name_to_remove, ntr_len);
+    
+    name_pos = find_name();
 
-    for (base_i = 0; base_i < base_length; base_i++){
-        
-        if (data_base[base_i] == ';'){
-            if (strcmp(name_to_remove, name_to_comp) == 0){
-                name_i = 0;
-                continue;
-            } else {
-                add_name(aux_data_base, name_to_comp);
-                name_i = 0;
-                continue;
-            }
-        }
-
-        if (name_i < 20) {
-            name_to_comp[name_i] = data_base[base_i];
-            name_i += 1;
-            name_to_comp[name_i] = '\0';
-        }
-    }
-
-    strcpy(data_base, aux_data_base);
-    aux_length = strlen(aux_data_base);
-
-    data_base[aux_length] = '\0';
+    printf("\n\n-----------------------------\n");
+    int i = find_name(data_base, "Fred");
+    printf("Fred inicia em %d\n", i);
+    printf("-----------------------------\n\n");
 }
 
 void list_names(char *data_base){
@@ -79,27 +72,18 @@ void list_names(char *data_base){
     }
 }
 
-void read_name(char *name){
-        
-    char letter = '\0';
-    getchar();
-
-    do {
-        
-        letter = getchar();
-        add_char_to_string(name, letter);
-    
-    } while (letter != '\n');
-
-    name[strlen(name)-1] = '\0';
-}
-
 int main(int argc, char const *argv[])
 {
     char *data_base = (char *) malloc(sizeof(char));
-    char *name = (char *) malloc(sizeof(char));
+    int *length = (int *) malloc(sizeof(int));
     int op = 0;
     
+    if (!data_base){printf("Erro! Falta de memoria");return -1;}
+    if (!length){printf("Erro! Falta de memoria");return -1;}
+    
+    *data_base = '\0';
+    *length = 1;
+
     while (op != 4){
 
         printf("\n----------MENU----------\n");
@@ -113,15 +97,12 @@ int main(int argc, char const *argv[])
 
         switch (op) {
         case 1:
-            printf("\nDigite o nome a ser adicionado: ");
-            read_name(name);
-            add_name(data_base, name);
+            add_name(data_base, length);
             break;
         
         case 2:
             printf("\nDigite o nome a ser removido: ");
-            read_name(name);
-            remove_name(data_base, name);
+            remove_name(data_base);
             break;
 
         case 3:
@@ -137,6 +118,9 @@ int main(int argc, char const *argv[])
             break;
         }
     }
+    
+    free(data_base);
+    free(length);
 
     return 0;
 }
