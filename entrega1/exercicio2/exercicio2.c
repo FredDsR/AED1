@@ -2,16 +2,20 @@
 #include <string.h>
 #include <stdlib.h>
 
-void add_char_to_string(char *string, int *length, char char_to_add){
+char *add_char_to_string(char *string, int *length, char char_to_add){
 
     string[*length-1] = char_to_add;
-    string = (char *) realloc(string, sizeof(char) * (*length + 1));
-    string[*length] = '\0';
-    
-    *length+=1;
+
+    *length += 1;
+
+    string = (char *) realloc(string, sizeof(char) * (*length));
+
+    string[*length - 1] = '\0';
+
+    return string;
 }
 
-void read_name(char *name, int *length){
+char *read_name(char *name, int *length){
     
     char letter = '\0';
     getchar();
@@ -19,9 +23,11 @@ void read_name(char *name, int *length){
     do {
 
         letter = getchar();
-        if (letter != '\n'){add_char_to_string(name, length, letter);}
+        if (letter != '\n'){name = add_char_to_string(name, length, letter);}
 
     } while (letter != '\n');
+
+    return name;
 }
 
 int find_name(char *data_base, char *name){
@@ -39,13 +45,13 @@ int find_name(char *data_base, char *name){
     while (data_base[i] != '\0')
     {
         if (data_base[i] != ';'){
-            add_char_to_string(name_to_comp, ntc_len, data_base[i]);
+            name_to_comp = add_char_to_string(name_to_comp, ntc_len, data_base[i]);
         } else {
             if (strcmp(name, name_to_comp) == 0){
                 return i_ref;
             }
             i_ref = i + 1;
-            name_to_comp = (char *) realloc(name_to_comp, 1);
+            name_to_comp = (char *) realloc(name_to_comp, sizeof(char));
             name_to_comp[0] = '\0';
             *ntc_len = 1;
         }
@@ -58,45 +64,67 @@ int find_name(char *data_base, char *name){
     return -1;
 }
 
-void add_name(char *data_base, int *length){
+char *add_name(char *data_base, int *length){
     printf("\nDigite o nome a ser adicionado: ");
-    read_name(data_base, length);
-    add_char_to_string(data_base, length, ';');
+    data_base = read_name(data_base, length);
+    data_base = add_char_to_string(data_base, length, ';');
+    return data_base;
 }
 
-void remove_name(char *data_base) {
+char *remove_name(char *data_base, int *base_len) {
     
     int name_pos = 0;
+    int letter_qty = 0;
+    int i = 0;
     char *name_to_remove = (char *) malloc(sizeof(char));
     int *ntr_len = (int *) malloc(sizeof(int));
     
-    if (!name_to_remove){printf("Erro! Falta de memoria");return -1;}
-    if (!ntr_len){printf("Erro! Falta de memoria");return -1;}
+    if (!name_to_remove){printf("Erro! Falta de memoria");}
+    if (!ntr_len){printf("Erro! Falta de memoria");}
 
-    printf("Digite o nome a ser removido: ");
-    read_name(name_to_remove, ntr_len);
+    *name_to_remove = '\0';
+    *ntr_len = 1;
+
+    printf("\nDigite o nome a ser removido: ");
+    name_to_remove = read_name(name_to_remove, ntr_len);
+
+    letter_qty = *ntr_len - 1;
+
+    name_pos = find_name(data_base, name_to_remove);
+
+    if (name_pos >= 0) {
+        while(i+name_pos != *base_len){
+            if (data_base[i + name_pos + letter_qty + 1] == '\0'){
+                break;
+            } else {
+                data_base[i + name_pos] = data_base[i + name_pos + letter_qty + 1]; 
+            }
+            i++;
+        }
     
-    name_pos = find_name();
+        data_base = (char *) realloc(data_base, sizeof(char) * (*base_len - *ntr_len));
+        *base_len -= *ntr_len;
+        data_base[*base_len-1] = '\0';
+    }
 
-    printf("\n\n-----------------------------\n");
-    int i = find_name(data_base, "Fred");
-    printf("Fred inicia em %d\n", i);
-    printf("-----------------------------\n\n");
+    free(name_to_remove);
+    free(ntr_len);
+
+    return data_base;
 }
 
-void list_names(char *data_base){
-    int base_length = 0;
+void list_names(char *data_base, int base_length){
     int i = 0;
-
-    base_length = strlen(data_base);
 
     printf("\nNomes disponíveis:\n\n");
     for (i = 0; i < base_length; i++){
-       
+
         if (data_base[i] == ';') {
             printf("\n");
             continue;
         }
+
+        if (data_base[i] == '\0'){break;}
 
         printf("%c", data_base[i]);
     }
@@ -127,16 +155,15 @@ int main(int argc, char const *argv[])
 
         switch (op) {
         case 1:
-            add_name(data_base, length);
+            data_base = add_name(data_base, length);
             break;
         
         case 2:
-            printf("\nDigite o nome a ser removido: ");
-            remove_name(data_base);
+            data_base = remove_name(data_base, length);
             break;
 
         case 3:
-            list_names(data_base);
+            list_names(data_base, *length);
             break;
         
         case 4:
