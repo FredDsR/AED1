@@ -21,4 +21,3 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 
 
 - Comanetários:
-    Repositório no GitHub: O repositório no GitHub pode ser acessado clicando neste link: https://github.com/FredDsR/AED1
