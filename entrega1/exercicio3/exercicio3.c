@@ -2,182 +2,184 @@
 #include <string.h>
 #include <stdlib.h>
 
-char *add_char_to_string(char *string, int *length, char char_to_add){
+typedef struct {
+    char name[10];
+    int age;
+    int phone;
+} Person;
 
-    string[*length-1] = char_to_add;
 
-    *length += 1;
+int find_person_index(void *pBuffer, char *name_to_find) {
+    int len = *(int *)pBuffer;
 
-    string = (char *) realloc(string, sizeof(char) * (*length));
+    Person person;
 
-    string[*length - 1] = '\0';
+    for (int i = 0; i < len; i++) {
+        person = *(Person *)(pBuffer + sizeof(int) + (sizeof(Person) * i));
 
-    return string;
-}
-
-char *read_name(char *name, int *length){
-    
-    char letter = '\0';
-    getchar();
-
-    do {
-
-        letter = getchar();
-        if (letter != '\n'){name = add_char_to_string(name, length, letter);}
-
-    } while (letter != '\n');
-
-    return name;
-}
-
-int find_name(char *data_base, char *name){
-    int i = 0;
-    int i_ref = 0;
-    int *ntc_len = (int *) malloc(sizeof(int));
-    char *name_to_comp = (char *) malloc(sizeof(char));
-
-    if (!ntc_len){printf("Erro! Falta de memoria");return -1;}
-    if (!name_to_comp){printf("Erro! Falta de memoria");return -1;}
-
-    *ntc_len = 1;
-    *name_to_comp = '\0';
-    
-    while (data_base[i] != '\0')
-    {
-        if (data_base[i] != ';'){
-            name_to_comp = add_char_to_string(name_to_comp, ntc_len, data_base[i]);
-        } else {
-            if (strcmp(name, name_to_comp) == 0){
-                return i_ref;
-            }
-            i_ref = i + 1;
-            name_to_comp = (char *) realloc(name_to_comp, sizeof(char));
-            name_to_comp[0] = '\0';
-            *ntc_len = 1;
+        if (strcmp(person.name, name_to_find) == 0) {
+            return i;
         }
-        i++;
     }
-
-    free(ntc_len);
-    free(name_to_comp);
 
     return -1;
 }
 
-char *add_name(char *data_base, int *length){
-    printf("\nDigite o nome a ser adicionado: ");
-    data_base = read_name(data_base, length);
-    data_base = add_char_to_string(data_base, length, ';');
-    return data_base;
+
+void find_person(void *pBuffer) {
+    char name_to_find[10];
+    int person_index = 0;
+    Person person;
+
+    printf("\nEnter the name to be searched: ");
+    scanf("%s^\n", name_to_find);
+
+    person_index = find_person_index(pBuffer, name_to_find);
+
+    if (person_index == -1) {
+        printf("\n -> The contact %s was not found! <-\n", name_to_find);
+    } else {
+        person = *(Person *)(pBuffer + sizeof(int) + (sizeof(Person) * person_index));
+
+        printf("Contact found:\n");
+        printf(" %s\n", person.name);
+        printf(" |_ Phone: %d\n", person.phone);
+        printf(" |_ Age: %d\n", person.age);
+    }
 }
 
-char *remove_name(char *data_base, int *base_len) {
+void *add_person(char *pBuffer){
     
-    int name_pos = 0;
-    int letter_qty = 0;
-    int i = 0;
-    char *name_to_remove = (char *) malloc(sizeof(char));
-    int *ntr_len = (int *) malloc(sizeof(int));
+    int old_len = *(int *)pBuffer;
+    int new_len = old_len + 1;
     
-    if (!name_to_remove){printf("Erro! Falta de memoria");}
-    if (!ntr_len){printf("Erro! Falta de memoria");}
+    Person new_person;
 
-    *name_to_remove = '\0';
-    *ntr_len = 1;
+    printf("\nEnter the new contact info:\n");
+    printf(" Name: ");
+    scanf("%s^\n", new_person.name);
+    printf(" Phone: ");
+    scanf("%d", &new_person.phone);
+    printf(" Age: ");
+    scanf("%d", &new_person.age);
 
-    printf("\nDigite o nome a ser removido: ");
-    name_to_remove = read_name(name_to_remove, ntr_len);
+    pBuffer = realloc(pBuffer, sizeof(int) + (sizeof(Person) * new_len));
 
-    letter_qty = *ntr_len - 1;
+    *(Person *)(pBuffer + sizeof(int) + (sizeof(Person) * old_len)) = new_person;
+    
+    *(int *)pBuffer = new_len;
 
-    name_pos = find_name(data_base, name_to_remove);
+    return pBuffer;
+}
 
-    if (name_pos >= 0) {
-        while(i+name_pos != *base_len){
-            if (data_base[i + name_pos + letter_qty + 1] == '\0'){
-                break;
-            } else {
-                data_base[i + name_pos] = data_base[i + name_pos + letter_qty + 1]; 
-            }
-            i++;
+char *remove_person(char *pBuffer) {
+    
+    char name_to_remove[10];
+    int person_index;
+    int old_len = *(int *)pBuffer; 
+    int new_len = old_len - 1;
+    int count = 0;
+
+    Person next_person;
+
+    printf("\nEnter the contact name to be removed: ");
+    scanf("%s^\n", name_to_remove);
+
+    person_index = find_person_index(pBuffer, name_to_remove);
+
+    count = person_index + 1;
+
+    if (person_index == -1){
+        printf("\n -> The contact %s was not found! <-\n", name_to_remove);
+    } else {
+        while (count < old_len){
+            next_person = *((Person *)(pBuffer + sizeof(int) + (sizeof(Person) * count)));
+
+            *((Person *)(pBuffer + sizeof(int) + (sizeof(Person) * (count - 1)))) = next_person;
+
+            count++;
         }
+        
+        pBuffer = realloc(pBuffer, sizeof(int) + (sizeof(Person) * new_len));
     
-        data_base = (char *) realloc(data_base, sizeof(char) * (*base_len - *ntr_len));
-        *base_len -= *ntr_len;
-        data_base[*base_len-1] = '\0';
+        *(int *)pBuffer = new_len;
     }
 
-    free(name_to_remove);
-    free(ntr_len);
-
-    return data_base;
+    return pBuffer;
 }
 
-void list_names(char *data_base, int base_length){
-    int i = 0;
+void list_people(char *pBuffer){
+    int len = *(int *)pBuffer;
 
-    printf("\nNomes disponíveis:\n\n");
-    for (i = 0; i < base_length; i++){
+    Person person;
 
-        if (data_base[i] == ';') {
-            printf("\n");
-            continue;
+    if (len == 0) {
+        printf("\nYour contact list are empty :(\n");
+    } else {
+        printf("\n\nYour contact list:\n");
+        for (int i = 0; i < len; i++)
+        {
+            person = *(Person *)(pBuffer + sizeof(int) + (sizeof(Person) * i));
+            
+            printf("|\n");
+            printf("|_ %s\n", person.name);
+            printf("| |_ Phone: %d\n", person.phone);
+            printf("| |_ Age: %d\n", person.age);
         }
-
-        if (data_base[i] == '\0'){break;}
-
-        printf("%c", data_base[i]);
+        printf("|\n");
+        printf("|_ End.\n");
     }
 }
 
 int main(int argc, char const *argv[])
 {
-    char *data_base = (char *) malloc(sizeof(char));
-    int *length = (int *) malloc(sizeof(int));
-    int op = 0;
+    int op = -1;
     
-    if (!data_base){printf("Erro! Falta de memoria");return -1;}
-    if (!length){printf("Erro! Falta de memoria");return -1;}
+    void *pBuffer = malloc(sizeof(int));
+    if (!pBuffer){printf("Error! Memory fault.");return -1;}
     
-    *data_base = '\0';
-    *length = 1;
+    *(int *)pBuffer = 0;
 
-    while (op != 4){
+    while (op != 0){
 
-        printf("\n----------MENU----------\n");
-        printf("  1) Adicionar nome\n");
-        printf("  2) Remover nome\n");
-        printf("  3) Listar\n");
-        printf("  4) Sair\n");
-        printf("------------------------\n");
-        printf("Escolha uma opção acima e digite o numero respectivo: ");
+        printf("\n----------CONTACTS----------\n");
+        printf("  1) Add contact\n");
+        printf("  2) Remove contact\n");
+        printf("  3) Search by name\n");
+        printf("  4) List\n");
+        printf("  0) Exit\n");
+        printf("------------------------------\n");
+        printf("Choice an option above and type the respective number: ");
         scanf("%d", &op);
 
         switch (op) {
         case 1:
-            data_base = add_name(data_base, length);
+            pBuffer = add_person(pBuffer);
             break;
         
         case 2:
-            data_base = remove_name(data_base, length);
-            break;
-
-        case 3:
-            list_names(data_base, *length);
+            pBuffer = remove_person(pBuffer);
             break;
         
+        case 3:
+            find_person(pBuffer);
+            break;
+
         case 4:
-            printf("\nAté logo!\n");
+            list_people(pBuffer);
+            break;
+        
+        case 0:
+            printf("\nBye!\n");
             break;
 
         default:
-            printf("\n -> Digite uma opção válida! <-\n");
+            printf("\n -> Type a valid option! <-\n");
             break;
         }
     }
     
-    free(data_base);
-    free(length);
+    free(pBuffer);
 
     return 0;
 }
