@@ -19,4 +19,4 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
     Para rodar o programa desenvolvido basta compilar com o comando "make compile" e, em seguida, rodar o comando "make run".
 
 
-- Comanetários:
+- Comentários:

@@ -19,5 +19,5 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
     Para rodar o programa desenvolvido basta compilar com o comando "make compile" e, em seguida, rodar o comando "make run".
 
 
-- Comanetários:
+- Comentários:
     Repositório no GitHub: O repositório no GitHub pode ser acessado clicando neste link: https://github.com/FredDsR/AED1
