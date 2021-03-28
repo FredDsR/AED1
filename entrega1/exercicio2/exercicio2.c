@@ -48,6 +48,8 @@ int find_name(char *data_base, char *name){
             name_to_comp = add_char_to_string(name_to_comp, ntc_len, data_base[i]);
         } else {
             if (strcmp(name, name_to_comp) == 0){
+                free(ntc_len);
+                free(name_to_comp);
                 return i_ref;
             }
             i_ref = i + 1;
