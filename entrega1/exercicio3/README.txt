@@ -20,3 +20,4 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 
 
 - Comentários:
+    Video de demonstração: O vídeos pode ser acessado pelo link: https://youtu.be/PmkYodrAGDY
