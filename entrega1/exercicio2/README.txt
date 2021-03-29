@@ -14,11 +14,12 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
     |_ exercício2.c - Arquivo fonte do programa.
     |_ README.txt   - Documentação do programa.
     |_ Makefile     - Arquivo com comandos úteis para a execução do comando.
+    |_ test.txt     - Arquivo com entradas pré definidas para teste automatizado.
 
 
 - Como rodar:
-    Para rodar o programa desenvolvido basta compilar com o comando "make compile" e, em seguida, rodar o comando "make run".
+    Para rodar o programa desenvolvido basta compilar com o comando "make compile" e, em seguida, rodar o comando "make run". Ou, se preferir, o comando "make test" irá rodar o programa já com as estradas especificadas em "test.txt".
 
 
 - Comentários:
-    Video de demonstração: O vídeos pode ser acessado pelo link: https://youtu.be/PSGDcvbBJmI
+    Video de demonstração: O vídeos pode ser acessado pelo link: https://drive.google.com/file/d/1ZGduViQZhdT26yto9vNE2ZV-xsUFEaBk/view?usp=sharing

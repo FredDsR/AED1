@@ -22,5 +22,5 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 - Comentários:
     Repositório no GitHub: O repositório no GitHub pode ser acessado clicando neste link: https://github.com/FredDsR/AED1
 
-    Video de demonstração: O vídeos pode ser acessado pelo link: https://youtu.be/QMefdgmL5PE
+    Video de demonstração: O vídeos pode ser acessado pelo link: https://drive.google.com/file/d/1yaJCDViKidxl_oiXC4_LjnxLj_FqDB4t/view?usp=sharing
 
