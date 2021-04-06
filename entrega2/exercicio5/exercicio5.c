@@ -10,13 +10,14 @@ typedef struct {
 Person read_person(){
     Person person;
 
-    printf("Enter with the new person data.\n");
+    printf("\nEnter with the new person data.\n");
     printf("Name: ");
     scanf("%s^\n", person.name);
     printf("Age: ");
     scanf("%d", &person.age);
     printf("Height (cm): ");
     scanf("%d", &person.height);
+    getchar();
 
     return person;
 }
@@ -27,8 +28,10 @@ Person *add_person(Person *people, int *people_qty){
     
     if (*people_qty == 0) {
         people = (Person *) malloc(sizeof(Person));
+        if (!people){return NULL;}
     } else {
         people = (Person *) realloc(people, sizeof(Person) * new_people_qty);
+        if (!people){return NULL;}
     }
 
     people[new_people_index] = read_person();
@@ -38,7 +41,7 @@ Person *add_person(Person *people, int *people_qty){
 }
 
 void print_people(Person *people, int *people_qty){
-    printf("List of people:\n");
+    printf("\nList of people:\n");
     for (int i = 0; i < *people_qty; i++) {
         printf("|\n");
         printf("|_%s\n", people[i].name);
