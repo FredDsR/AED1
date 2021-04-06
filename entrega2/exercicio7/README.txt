@@ -20,4 +20,4 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 
 
 - Comentários:
-    Video de demonstração: O vídeos pode ser acessado pelo link: https://drive.google.com/file/d/1CbjETS1uDrKfK5j8LGzHDu7xgcIzmqX9/view?usp=sharing
+    Video de demonstração: O vídeos pode ser acessado pelo link: https://drive.google.com/file/d/1USCr6YyUILiKl-WZ-TgNAC2WhoQb4S7C/view?usp=sharing
