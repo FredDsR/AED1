@@ -44,7 +44,7 @@ Node *POP(List *list, unsigned int index){
     int count = 0;
     Node *cur_node = list->firstNode;
 
-    if (index > list->length - 1) {
+    if (index >= list->length) {
         printf("Sorry! Index is out of bounds 0 and %d.", list->length);
     } else if (index == 0) {
         list->firstNode = cur_node->next;
