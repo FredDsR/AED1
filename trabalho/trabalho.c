@@ -240,7 +240,11 @@ void reset_list(List *list){
     }   
 }
 
-// TODO Ordenação ta dando bosta, testar: adicionar varias pessoas e ver no que dá
+/* 
+TODO Ordenação ta dando bosta, testar: adicionar varias pessoas e ver no que dá
+esse probelma da na ordenação por nome mas não testei com outras ordenações
+
+*/
 
 int main(int argc, char const *argv[]) {
 
