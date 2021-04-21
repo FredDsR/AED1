@@ -53,15 +53,13 @@ int compare_people(SORT sort, Person person_1, Person person_2){
 int search_by_name(List *list, char *name){
     int count = 0;
     Node *curr_node = list->firstNode;
-    while (curr_node || curr_node->next)
-    {
-        if (strcmp(curr_node->person.name, name) == 0) {
-            return count;
-        } else {
-            curr_node = curr_node->next;
-            count++;
-        }
-
+    
+    if (strcmp(list->firstNode->person.name, name) == 0){return 0;}
+    
+    while (curr_node->next ){
+        curr_node = curr_node->next;
+        count++;
+        if (strcmp(curr_node->person.name, name) == 0){return count;}
     }
     return -1;
 }
@@ -133,8 +131,25 @@ void PUSH(List *list, Node *new_node){
 
             list->length += 1;
 
-        } else {
+        } else if (!curr_node->next){
+            if (compare_people(list->sort, curr_node->person, new_node->person) > 0){
+                
+                new_node->prev = curr_node->prev;
+                curr_node->prev = new_node;
+                new_node->next = curr_node;
+
+                if(new_node->prev){new_node->prev->next = new_node;}
+
+            } else {
+                new_node->prev = curr_node;
+                new_node->next = curr_node->next;
+                curr_node->next = new_node;
             
+                if (new_node->next){new_node->next->prev = new_node;}
+            }
+
+            list->length += 1;
+        } else {
             new_node->next = curr_node;
             new_node->prev = curr_node->prev;
             curr_node->prev = new_node;
@@ -240,30 +255,36 @@ void reset_list(List *list){
     }   
 }
 
-/* 
-TODO Ordenação ta dando bosta, testar: adicionar varias pessoas e ver no que dá
-esse probelma da na ordenação por nome mas não testei com outras ordenações
-
-*/
-
 int main(int argc, char const *argv[]) {
 
-    int op = -1;
+    void *pBuffer = malloc(sizeof(List) + sizeof(unsigned long) + sizeof(int));
+    /*  
+    Primira posição é um ponteiro para a lista - ((List *)pBuffer)
+    Segunda posição é um inteiro representando o tamanho total alocado - *((unsigned long *)(pBuffer + sizeof(List)))
+    Terceira posição é um inteiro para controlar o switch - pBuffer + sizeof(List) + sizeof(int)
+    */
 
-    List *peopleList = malloc(sizeof(List));
-    if (!peopleList){printf("Error! Memory fault.");return -1;}
+    if(!pBuffer){printf("Error! Memory fault"); return -1;}
 
-    peopleList->length = 0;
-    peopleList->firstNode = NULL;
+    // Tamanho atual alocado pro pBuffer
+    *((unsigned long *)(pBuffer + sizeof(List))) = sizeof(List) + sizeof(unsigned long) + sizeof(int);
+
+    // Parametros iniciais da lista
+    ((List *)pBuffer)->length = 0;
+    ((List *)pBuffer)->firstNode = NULL;
+
+    // Controlador do switch
+    *((int *)(pBuffer + sizeof(List) + sizeof(unsigned long))) = -1;
+
 
     printf("\n-----------------Available sortings-----------------\n");
-    printf(" -> Sort by name: %d\n", NAME_SORT);
-    printf(" -> Sort by age: %d\n", AGE_SORT);
-    printf(" -> Sort by phone: %d\n", PHONE_SORT);
+    printf(" (%d) Sort by name\n", NAME_SORT);
+    printf(" (%d) Sort by age\n", AGE_SORT);
+    printf(" (%d) Sort by phone\n", PHONE_SORT);
     printf("Enter the respective number of the desired ordering: ");
-    scanf("%d", &peopleList->sort);
+    scanf("%d", &((List *)pBuffer)->sort);
 
-    while (op != 0){
+    while (*((int *)(pBuffer + sizeof(List) + sizeof(unsigned long))) != 0){
 
         printf("\n----------CONTACTS----------\n");
         printf("  1) Add contact\n");
@@ -273,27 +294,27 @@ int main(int argc, char const *argv[]) {
         printf("  0) Exit\n");
         printf("------------------------------\n");
         printf("Choice an option above and type the respective number: ");
-        scanf("%d", &op);
+        scanf("%d", ((int *)(pBuffer + sizeof(List) + sizeof(unsigned long))));
 
-        switch (op) {
+        switch (*((int *)(pBuffer + sizeof(List) + sizeof(unsigned long)))) {
         case 1:
-            add_person(peopleList);
+            add_person(((List *)pBuffer));
             break;
         
         case 2:
-            remove_person(peopleList);
+            remove_person(((List *)pBuffer));
             break;
         
         case 3:
-            find_person(peopleList);
+            find_person(((List *)pBuffer));
             break;
 
         case 4:
-            list_people(peopleList);
+            list_people(((List *)pBuffer));
             break;
         
         case 0:
-            reset_list(peopleList);
+            reset_list(((List *)pBuffer));
             printf("\nBye!\n");
             break;
 
@@ -302,7 +323,6 @@ int main(int argc, char const *argv[]) {
             break;
         }
     }
-    
-//TODO 
+    free(pBuffer);
     return 0;
 }
