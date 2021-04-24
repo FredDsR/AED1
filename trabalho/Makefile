@@ -8,4 +8,4 @@ debug:
 	gcc -g trabalho.c -Wall
 
 test:
-	gcc trabalho.c -Wall -o trabalho; ./trabalho < test.txt
+	gcc trabalho.c -Wall -o trabalho; ./trabalho < tests/test_general.txt

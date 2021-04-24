@@ -14,10 +14,14 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 
 
 - Estrutura do diretório:
-    |_ trabalho.c - Arquivo fonte do programa.
-    |_ README.txt   - Documentação do programa.
-    |_ Makefile     - Arquivo com comandos úteis para a execução do comando.
-    |_ test.txt     - Arquivo com entradas pré definidas para teste automatizado.
+    |_ trabalho.c               - Arquivo fonte do programa.
+    |_ README.txt               - Documentação do programa.
+    |_ Makefile                 - Arquivo com comandos úteis para a execução do comando.
+    |_ tests/                   - Diretório com arquivos de teste
+      |_ test_phone_sort.txt    - Arquivo com entradas pré definidas para teste da ordenação por número de telefone.
+      |_ test_age_sort.txt      - Arquivo com entradas pré definidas para teste da ordenação por idade.
+      |_ test_name_sort.txt     - Arquivo com entradas pré definidas para teste da ordenação por nome.
+      |_ test_general.txt       - Arquivo com entradas pré definidas para este das funcionalidades gerais do código.
 
 
 - Como rodar:

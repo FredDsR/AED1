@@ -30,20 +30,21 @@ typedef struct {
 int compare_people(void *pBuffer){
     // Quarta posição é o nodo que ta sendo inserido *((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))
     // Quinta posição é o nodo corrente *((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))
+    
     if (((List *)pBuffer)->sort == NAME_SORT){
-        return strcmp(((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.name, ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.name);
+        return strcmp(((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.name, ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.name);
     } else if (((List *)pBuffer)->sort == AGE_SORT) {
-        if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.age > ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.age){
+        if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.age > ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.age){
             return 1;
-        } else if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.age < ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.age) {
+        } else if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.age < ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.age) {
             return -1;
         } else {
             return 0;
         }
     } else if (((List *)pBuffer)->sort == PHONE_SORT) {
-        if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.phone > ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.phone){
+        if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.phone > ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.phone){
             return 1;
-        } else if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.phone < ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.phone) {
+        } else if (((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->person.phone < ((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(Node) * 2)))->person.phone) {
             return -1;
         } else {
             return 0;
