@@ -266,40 +266,22 @@ void *remove_person(void *pBuffer) {
         printf("Your contact list is empty.\n");
     } else {
 
-        // Quarta posição é o indice a ser deletado         *((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - (sizeof(char)*10)))
-        // Quinta posição é o nome da pessoa a ser deletada *((char *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(char)*10)))
-        *((unsigned long *)(pBuffer + sizeof(List))) = *((unsigned long *)(pBuffer + sizeof(List))) + sizeof(int) + (sizeof(char)*10);
+        // Quarta posição é o indice a ser deletado         *((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int)))
+        *((unsigned long *)(pBuffer + sizeof(List))) = *((unsigned long *)(pBuffer + sizeof(List))) + sizeof(int);
         pBuffer = realloc(pBuffer, *((unsigned long *)(pBuffer + sizeof(List))));
         if (!pBuffer){printf("Error! Memory fault.");return NULL;}
 
-        printf("\nEnter the contact name to be removed: ");
-        scanf("%s^\n", ((char *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(char)*10))));
+        *((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int))) = 0;
+
+        // Quarta posição é o indice a ser deletado *((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - sizeof(Node)))
+        // Quinta posição é o nodo a ser deletado   *((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))
+        pBuffer = POP(pBuffer);
         
-        pBuffer = search_by_name(pBuffer);
+        free(((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->my_address);
 
-        if (*((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - (sizeof(char)*10))) < 0) {
-            printf("Sorry, the contact named %s do not exists.\n", ((char *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(char)*10))));
-        
-            *((unsigned long *)(pBuffer + sizeof(List))) = *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - (sizeof(char)*10);
-            pBuffer = realloc(pBuffer, *((unsigned long *)(pBuffer + sizeof(List))));
-            if (!pBuffer){printf("Error! Memory fault.");return NULL;}
-        } else {
-
-            // Quarta posição é o indice a ser deletado *((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int)))
-            *((unsigned long *)(pBuffer + sizeof(List))) = *((unsigned long *)(pBuffer + sizeof(List))) - (sizeof(char)*10);
-            pBuffer = realloc(pBuffer, *((unsigned long *)(pBuffer + sizeof(List))));
-            if (!pBuffer){printf("Error! Memory fault.");return NULL;}
-
-            // Quarta posição é o indice a ser deletado *((int *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - sizeof(Node)))
-            // Quinta posição é o nodo a ser deletado   *((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))
-            pBuffer = POP(pBuffer);
-            
-            free(((Node *)(pBuffer + *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(Node)))->my_address);
-
-            *((unsigned long *)(pBuffer + sizeof(List))) = *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - sizeof(Node);
-            pBuffer = realloc(pBuffer, *((unsigned long *)(pBuffer + sizeof(List))));
-            if (!pBuffer){printf("Error! Memory fault.");return NULL;}
-        }
+        *((unsigned long *)(pBuffer + sizeof(List))) = *((unsigned long *)(pBuffer + sizeof(List))) - sizeof(int) - sizeof(Node);
+        pBuffer = realloc(pBuffer, *((unsigned long *)(pBuffer + sizeof(List))));
+        if (!pBuffer){printf("Error! Memory fault.");return NULL;}
     }
 
     return pBuffer;
