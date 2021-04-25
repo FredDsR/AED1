@@ -29,4 +29,7 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 
 
 - Comentários:
-    Video de demonstração: O vídeos pode ser acessado pelo link: <inserir link para o video>
+    Video de demonstração: O vídeos pode ser acessado pelo link: https://drive.google.com/file/d/1kCNUYVeJqnYU4oaskrlqRhK8_bP1il6V/view?usp=sharing
+
+    O vídeo acabou ficando um pouco mais longo que o comum por causa da complexidade do trabalho, quis deixar claro minhas decisões de projeto e explicar alguns outos pontos.
+
