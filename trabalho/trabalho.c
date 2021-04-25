@@ -7,7 +7,6 @@
 #define PHONE_SORT 3
 typedef int SORT;
 
-
 typedef struct {
     char name[10];
     int age;
@@ -449,7 +448,6 @@ int main(int argc, char const *argv[]) {
     scanf("%d", &((List *)pBuffer)->sort);
 
     while (*((int *)(pBuffer + sizeof(List) + sizeof(unsigned long))) != 0){
-        printf("\n\n-> Tamanho do buffer: %lu", *((unsigned long *)(pBuffer + sizeof(List))));
         printf("\n----------CONTACTS----------\n");
         printf("  1) Add contact\n");
         printf("  2) Remove contact\n");
