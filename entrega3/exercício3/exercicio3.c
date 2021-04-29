@@ -6,6 +6,7 @@ typedef int Key;
 
 typedef struct {
     Key key;
+    int num;
 } Registry;
 
 typedef struct Node * Pointer;
@@ -61,6 +62,56 @@ void insert(Registry reg, Pointer *pointer) {
     printf("\nError: Registry %d already exists.\n", reg.key);
 }
 
+void complex_deletion(Pointer to_remove, Pointer *to_replace){
+    Pointer aux;
+
+    if ((*to_replace)->rigth) {
+        complex_deletion(to_remove, &(*to_replace)->rigth);
+        return;
+    }
+
+    to_remove->reg = (*to_replace)->reg;
+    aux = *to_replace;
+    *to_replace = (*to_replace)->left;
+    free(aux);
+}
+
+void delete(Registry reg, Pointer *pointer) {
+
+    Pointer aux;
+
+    if (!*pointer) {
+        printf("Error: Registry %d not found.", reg.key);
+        return;
+    }
+
+    if (reg.key < (*pointer)->reg.key){
+        delete(reg, &(*pointer)->left);
+        return;
+    }
+
+    if (reg.key > (*pointer)->reg.key) {
+        delete(reg, &(*pointer)->rigth);
+        return;
+    }
+
+    if (!(*pointer)->rigth) {
+        aux = *pointer;
+        *pointer = (*pointer)->left;
+        free(aux);
+        return;
+    }
+
+    if (!(*pointer)->left) {
+        aux = *pointer;
+        *pointer = (*pointer)->rigth;
+        free(aux);
+        return;
+    }
+
+    complex_deletion(*pointer, &(*pointer)->left);
+}
+
 void print_tree(Pointer *pointer) {
     if (*pointer){
         printf("(%d", (*pointer)->reg.key);
@@ -70,31 +121,43 @@ void print_tree(Pointer *pointer) {
     }
 }
 
+void initialize(Pointer *dictionary){
+    *dictionary = NULL;
+}
+
 int main(int argc, char const *argv[])
 {
-    Pointer tree = NULL;
-    Pointer to_search = NULL;
+    Pointer *tree = (Pointer *) malloc(sizeof(Pointer));
     Registry reg[10];
+    Registry *reg_to_search = (Registry *) malloc(sizeof(Registry));
 
     time_t t;
     srand((unsigned) time(&t));
     
+    initialize(tree);
 
     for (int i = 0; i < 10; i++) {
         reg[i].key = rand() % 50;
-        insert(reg[i], &tree);
+        reg[i].num = rand() % 50;
+        insert(reg[i], tree);
     }
 
-    printf("\nTree: ");
-    print_tree(&tree);
+    printf("\n1 Tree: ");
+    print_tree(tree);
     printf("\n");
 
-    search(&reg[0], tree);
-
-    printf("\nSub-Tree: ");
-    print_tree(&to_search);
-    printf("\n");
+    delete(reg[4], tree);
     
+    printf("\n2 Tree: ");
+    print_tree(tree);
+    printf("\n");
+
+
+    reg_to_search->key = reg[3].key;
+    search(reg_to_search, *tree);
+
+    printf("\n-> reg[3].num: %d\n", reg[3].num);
+    printf("\n-> reg_to_search->num: %d\n", reg_to_search->num);
 
     return 0;
 }
