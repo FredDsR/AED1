@@ -225,6 +225,16 @@ void initialize(Pointer *dictionary){
     *dictionary = NULL;
 }
 
+void reset_tree(Pointer pointer){
+    if (!pointer){
+        return;
+    }
+
+    reset_tree(pointer->left);
+    reset_tree(pointer->right);
+    free(pointer);
+}
+
 int standard_avl_verification(Pointer pointer){
     int bf = 0;
 
@@ -260,16 +270,17 @@ void print_tree_status(Pointer *tree){
     printf("\nTrue = 1; False = 0\n");
 }
 
-int main(int argc, char const *argv[])
-{
-    int node_qty = 0, key_to_remove = 0;
+void first_scenario(){
+    int node_qty = 0;
     Registry reg;
     Pointer *tree = (Pointer *) malloc(sizeof(Pointer));
     srand((unsigned) time(0));
     
     initialize(tree);
 
-    printf("Enter the number of desired nodes: ");
+    printf("\n---- First Scenario ----\n");
+
+    printf("\nEnter the number of desired nodes: ");
     scanf("%d", &node_qty);
 
     for (int i = 0; i < node_qty; i++) {
@@ -279,14 +290,57 @@ int main(int argc, char const *argv[])
 
     print_tree_status(tree);
 
-    for (int i = 0; i < count_nodes(*tree); i++){
-        printf("Choose a key to remove: ");
-        scanf("%d", &key_to_remove);
-        reg.key = key_to_remove;
-        delete(reg, tree);
+    reset_tree(*tree);
+    free(tree);
+}
 
-        print_tree_status(tree);
-    }
+void second_scenario(){
+    Registry reg;
+    Pointer *tree = (Pointer *) malloc(sizeof(Pointer));
 
+    initialize(tree);
+
+    printf("\n---- Second Scenario ----\n");
+
+    reg.key = 50;
+    insert(reg, tree);
+    print_tree_status(tree);
+    reg.key = 35;
+    insert(reg, tree);
+    print_tree_status(tree);
+    printf("\nRight rotation\n");
+    reg.key = 22;
+    insert(reg, tree);
+    print_tree_status(tree);
+    reg.key = 27;
+    insert(reg, tree);
+    print_tree_status(tree);
+    printf("\nLeft rotation\n");
+    reg.key = 30;
+    insert(reg, tree);
+    print_tree_status(tree);
+    reg.key = 22;
+    delete(reg, tree);
+    print_tree_status(tree);
+    printf("\nDouble right rotation\n");
+    reg.key = 50;
+    delete(reg, tree);
+    print_tree_status(tree);
+    reg.key = 32;
+    insert(reg, tree);
+    print_tree_status(tree);
+    printf("\nDouble left rotation\n");
+    reg.key = 27;
+    delete(reg, tree);
+    print_tree_status(tree);
+    
+    reset_tree(*tree);
+    free(tree);
+}
+
+int main(int argc, char const *argv[])
+{
+    first_scenario();
+    second_scenario();
     return 0;
 }
