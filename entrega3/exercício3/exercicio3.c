@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 typedef int Key;
 
@@ -15,23 +16,31 @@ typedef struct Node {
     Pointer left, right;
 } Node;
 
-int length(Pointer *pointer){
-    int left_len = 0, right_len = 0;
-    if (!*pointer){
+int count_nodes(Pointer pointer){
+    if (!pointer) {
         return 0;
     }
-    left_len = length(&((*pointer)->left));
-    right_len = length(&((*pointer)->right));
+
+    return 1 + count_nodes(pointer->left) + count_nodes(pointer->right);
+}
+
+int height(Pointer pointer){
+    int left_height = 0, right_height = 0;
+    if (!pointer){
+        return 0;
+    }
+    left_height = height(pointer->left);
+    right_height = height(pointer->right);
     
-    if (left_len > right_len) {
-        return 1 + left_len;
+    if (left_height > right_height) {
+        return 1 + left_height;
     } else {
-        return 1 + right_len;
+        return 1 + right_height;
     }
 }
 
-int balancing_factor(Pointer *pointer){
-    return length(&(*pointer)->left) - length(&(*pointer)->right);
+int get_balancing_factor(Pointer *pointer){
+    return height((*pointer)->left) - height((*pointer)->right);
 }
 
 void rotate_left(Pointer *pointer_to_root){
@@ -51,7 +60,7 @@ void rotate_right(Pointer *pointer_to_root){
 }
 
 int balance_left(Pointer *pointer){
-    int left_bf = balancing_factor(&(*pointer)->left);
+    int left_bf = get_balancing_factor(&(*pointer)->left);
 
     if (left_bf > 0) {
         rotate_right(pointer);
@@ -65,7 +74,7 @@ int balance_left(Pointer *pointer){
 }
 
 int balance_right(Pointer *pointer){
-    int right_bf = balancing_factor(&(*pointer)->right);
+    int right_bf = get_balancing_factor(&(*pointer)->right);
 
     if (right_bf < 0) {
         rotate_left(pointer);
@@ -79,7 +88,7 @@ int balance_right(Pointer *pointer){
 }
 
 int balance(Pointer *pointer){
-    int root_bf = balancing_factor(pointer);
+    int root_bf = get_balancing_factor(pointer);
     if (root_bf > 1) {
         return balance_left(pointer);
     }
@@ -145,16 +154,6 @@ int insert(Registry reg, Pointer *pointer) {
     return 0;
 }
 
-void deletion_balance(Pointer *pointer){
-    balance(pointer);
-    if ((*pointer)->left){
-        deletion_balance(&(*pointer)->left);
-    }
-    if ((*pointer)->right){
-        deletion_balance(&(*pointer)->right);
-    }
-}
-
 void complex_deletion(Pointer to_remove, Pointer *to_replace){
     Pointer aux;
 
@@ -169,40 +168,48 @@ void complex_deletion(Pointer to_remove, Pointer *to_replace){
     free(aux);
 }
 
-void delete(Registry reg, Pointer *pointer) {
-
+int delete(Registry reg, Pointer *pointer) {
     Pointer aux;
 
     if (!*pointer) {
         printf("Error: Registry %d not found.", reg.key);
-        return;
+        return 0;
     }
 
     if (reg.key < (*pointer)->reg.key){
-        delete(reg, &(*pointer)->left);
-        return;
+        if (delete(reg, &(*pointer)->left)){
+            balance(pointer);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     if (reg.key > (*pointer)->reg.key) {
-        delete(reg, &(*pointer)->right);
-        return;
+        if (delete(reg, &(*pointer)->right)){
+            balance(pointer);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     if (!(*pointer)->right) {
         aux = *pointer;
         *pointer = (*pointer)->left;
         free(aux);
-        return;
+        return 1;
     }
 
     if (!(*pointer)->left) {
         aux = *pointer;
         *pointer = (*pointer)->right;
         free(aux);
-        return;
+        return 1;
     }
 
     complex_deletion(*pointer, &(*pointer)->left);
+    return 1;
 }
 
 void print_tree(Pointer *pointer) {
@@ -218,23 +225,39 @@ void initialize(Pointer *dictionary){
     *dictionary = NULL;
 }
 
-int avl_verification(Pointer pointer){
-    int bf;
+int standard_avl_verification(Pointer pointer){
+    int bf = 0;
 
     if (!pointer) {
         return 1;
     }
 
-    if (!avl_verification(pointer->left)){return 0;}
-    if (!avl_verification(pointer->right)){return 0;}
+    if (!standard_avl_verification(pointer->left)){return 0;}
+    if (!standard_avl_verification(pointer->right)){return 0;}
 
-    bf = balancing_factor(&pointer);
-
+    bf = get_balancing_factor(&pointer);
+    
     if ((bf > 1) || (bf < -1)){
         return 0;
     } else {
         return 1;
     }
+}
+
+int calc_avl_verification(int nodes_qty, int tree_height){
+    if (((1.44 * log2f((float) nodes_qty + 2)) + 1.0) > (float) tree_height){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void print_tree_status(Pointer *tree){
+    printf("\nTree: ");
+    print_tree(tree);
+    printf("\n-> Standard AVL Verification:\t%d", standard_avl_verification(*tree));
+    printf("\n-> Calc AVL Verification:\t%d", calc_avl_verification(count_nodes(*tree), height(*tree)));
+    printf("\nTrue = 1; False = 0\n");
 }
 
 int main(int argc, char const *argv[])
@@ -254,21 +277,16 @@ int main(int argc, char const *argv[])
         insert(reg, tree);
     }
 
-    printf("\nTree: ");
-    print_tree(tree);
-    printf("\nAVL Verification: %d\n", avl_verification(*tree));
-    printf("True = 1; False = 0\n");
+    print_tree_status(tree);
 
-    printf("Choose a key to remove: ");
-    scanf("%d", &key_to_remove);
-    reg.key = key_to_remove;
-    delete(reg, tree);
-    deletion_balance(tree);
+    for (int i = 0; i < count_nodes(*tree); i++){
+        printf("Choose a key to remove: ");
+        scanf("%d", &key_to_remove);
+        reg.key = key_to_remove;
+        delete(reg, tree);
 
-    printf("\nTree: ");
-    print_tree(tree);
-    printf("\nAVL Verification: %d\n", avl_verification(*tree));
-    printf("True = 1; False = 0\n");
+        print_tree_status(tree);
+    }
 
     return 0;
 }
