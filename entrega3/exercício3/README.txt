@@ -28,6 +28,6 @@ Autor: Frederico Dal Soglio Reckziegel | fdsreckziegel@inf.ufpel.edu.br
 
 
 - Comentários:
-    Video de demonstração: O vídeos pode ser acessado pelo link: <Inserir video aqui>
+    Video de demonstração: O vídeos pode ser acessado pelo link: https://drive.google.com/file/d/191cxpfY1T2j1LxR_V8wPgaitItsABGi2/view?usp=sharing
 
     Segundo cenário: Escolhi utilizar essa sugestão https://stackoverflow.com/a/3958672 para o segundo cenário por recomendação do monitor da diciplina. Porém, também adicionei uma verificação utilizando o terceiro tópico compartilhado no post do StackOverflow citado no exercício, que consiste em um calculo disponibilizado pelos criadores do AVL.
