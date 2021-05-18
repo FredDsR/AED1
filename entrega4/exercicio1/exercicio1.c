@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int * insertion_sort(int * disordered_elements){
+int * insertion_sort(int * disordered_elements, int qty){
     return disordered_elements;
 }
 
@@ -83,7 +83,7 @@ int main(int argc, char const *argv[])
 
 
     clock_gettime(CLOCK_REALTIME, &begin);
-    insertion_sort_elements = insertion_sort(insertion_sort_elements);
+    insertion_sort_elements = insertion_sort(insertion_sort_elements, qty);
     clock_gettime(CLOCK_REALTIME, &end);
     insertion_sort_time_interval = get_time_interval(begin, end);
     
