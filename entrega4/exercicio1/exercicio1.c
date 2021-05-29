@@ -38,8 +38,7 @@ int * insertion_sort(int * elements, int qty){
 int * selection_sort(int * elements, int qty){
     int i = 0, j = 0, min_idx = 0, tmp = 0; 
 
-    for (i = 0; i < qty-1; i++) 
-    { 
+    for (i = 0; i < qty-1; i++){ 
         min_idx = i; 
         for (j = i+1; j < qty; j++) 
         if (elements[j] < elements[min_idx]){
@@ -58,10 +57,12 @@ void merge(int *elements, int left, int mid, int right)
     int right_qty = right - mid;
     int left_list[left_qty], right_list[right_qty];
 
-    for (int i = 0; i < left_qty; i++)
+    for (int i = 0; i < left_qty; i++){
         left_list[i] = elements[left + i];
-    for (int j = 0; j < right_qty; j++)
+    }
+    for (int j = 0; j < right_qty; j++){
         right_list[j] = elements[mid + 1 + j];
+    }
  
     int i = 0;
     int j = 0;
@@ -191,29 +192,32 @@ int main(int argc, char const *argv[])
     }
     printf("]\n");
 
+    printf("\n > Running Insertion Sort...\n");
     clock_gettime(CLOCK_REALTIME, &begin);
     insertion_sort_elements = insertion_sort(insertion_sort_elements, qty);
     clock_gettime(CLOCK_REALTIME, &end);
     insertion_sort_time_interval = get_time_interval(begin, end);
+    print_report("Insertion Sort", insertion_sort_elements, qty, insertion_sort_time_interval);
     
+    printf("\n > Running Selection Sort...\n");
     clock_gettime(CLOCK_REALTIME, &begin);
     selection_sort_elements = selection_sort(selection_sort_elements, qty);
     clock_gettime(CLOCK_REALTIME, &end);
     selection_sort_time_interval = get_time_interval(begin, end);
+    print_report("Selection Sort", selection_sort_elements, qty, selection_sort_time_interval);
     
+    printf("\n > Running Merge Sort...\n");
     clock_gettime(CLOCK_REALTIME, &begin);
     merge_sort(merge_sort_elements, 0, qty-1);
     clock_gettime(CLOCK_REALTIME, &end);
     merge_sort_time_interval = get_time_interval(begin, end);
+    print_report("Merge Sort", merge_sort_elements, qty, merge_sort_time_interval);
     
+    printf("\n > Running Quick Sort...\n");
     clock_gettime(CLOCK_REALTIME, &begin);
     quick_sort(quick_sort_elements, 0, qty - 1);
     clock_gettime(CLOCK_REALTIME, &end);
     quick_sort_time_interval = get_time_interval(begin, end);
-    
-    print_report("Insertion Sort", insertion_sort_elements, qty, insertion_sort_time_interval);
-    print_report("Selection Sort", selection_sort_elements, qty, selection_sort_time_interval);
-    print_report("Merge Sort", merge_sort_elements, qty, merge_sort_time_interval);
     print_report("Quick Sort", quick_sort_elements, qty, quick_sort_time_interval);
 
     printf("\n------------- Performance comparison --------------");
